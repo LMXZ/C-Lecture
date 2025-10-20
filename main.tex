@@ -1,0 +1,196 @@
+\documentclass[lang=cn,newtx,10pt,scheme=chinese]{elegantbook}
+
+\title{C 语言课程讲义}
+
+\author{LMXZ}
+\date{2025-10-21}
+\version{0.1}
+
+\setcounter{tocdepth}{3}
+
+\cover{cover.jpg}
+
+% 本文档命令
+\usepackage{array}
+\usepackage{titlesec}
+
+\input{lmbook.tex}
+
+% 修改标题页的橙色带
+\definecolor{customcolor}{RGB}{32,178,170}
+\colorlet{coverlinecolor}{customcolor}
+\usepackage{cprotect}
+
+\addbibresource[location=local]{reference.bib} % 参考文献，不要删除
+
+\begin{document}
+
+\maketitle
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+\chapter{快速入门}
+
+\section{快速配置开发工具}
+
+前期建议使用易配置的 Code::Blocks 作为编程工具。可以在这里下载：
+
+\href{https://www.codeblocks.org/downloads/binaries/}
+{https://www.codeblocks.org/downloads/binaries/}
+
+\section{第一个程序，Hello World！}
+
+Hello World 是指输出“Hello, World”的简单程序，在开始学习一门语言时，一般会从这里开始入手。
+
+\begin{lstlisting}[language=C]
+    #include <stdio.h>
+    
+    int main() {
+        printf("Hello, World!"); // 输出 Hello World
+        return 0; // 程序结束
+    }
+\end{lstlisting}        
+
+现在程序写好了，需要运行时就点击上面的“\includegraphics{image/btn_compile_run.png}”按钮。
+
+目前你需要了解的是：
+
+\begin{itemize}
+    \item \lstinline{#include <stdio.h>} 是预处理指令，用于包含标准输入输出库，提供 \lstinline{printf} 函数的定义；
+    \item \lstinline{int main()} 是主函数的定义，程序从这里开始执行；
+    \item \lstinline{printf("Hello, World!");} 用于输出内容到屏幕，括号内的内容是要输出的字符串；
+    \item \lstinline{return 0;} 表示程序正常结束，返回值为 0；
+    \item “\lstinline{// 输出 Hello World}” 这种字样是注释，用于做批注，以便人类能看懂；计算机并不会理会 \lstinline{//} 以及后面的内容；
+    \item 在 \lstinline{int main} 里面的每一行的结尾都必须有一个分号 “\lstinline{;}”；
+    \item 输入程序的时候要特别注意，把输入法关掉，否则你输入的符号会变成全角字符；程序中的符号应该统一为半角字符。
+\end{itemize}
+
+\section{输入输出}
+
+刚才的例子中，\lstinline{printf("XX")} 是用于输出内容的。
+然而一个程序往往需要输入、计算、输出三步。我们看第二个例子：
+
+\label{sec:input-output}
+\begin{lstlisting}[language=C]
+    #include <stdio.h>
+    
+    int main() {
+        int a, b; // 定义变量 a b；
+        printf("Please input the value of a and b:");
+        scanf("%d%d", &a, &b); // 读入 a b
+        int c = a + b; // 计算 a+b 的结果，存到变量 c 里面
+        printf("The result of %d + %d is: %d", a, b, c); // 输出结果
+        return 0;
+    }
+\end{lstlisting}
+
+这个程序会读取用户输入的两个数字，相加并输出。
+运行程序，输入“\lstinline{3 5}”（注意中间有空格），你会看到程序输出了“\lstinline{The result of 3 + 5 is: 8}”。
+
+这里你需要记住三句话的用法：
+
+\begin{itemize}
+    \item \lstinline{int} 用于定义整数型变量，一行可以定义多个变量；定义时如果在后面加上 “\lstinline{= xx}”，就会同时给它赋值。
+    \item \lstinline{scanf} 用于输入，有两个 \lstinline{%d}，这个东西被称为“占位符”；要读取几个变量，引号中就要有多少个 \lstinline{%d}；
+    \item \codex{printf} 用于输出变量，其中 \lstinline{%d} 也是占位符，每个占位符会被依次替换为后面的每个表达式的值。
+\end{itemize}
+
+\section{分支选择、数据类型、算术运算}
+
+\begin{lstlisting}[language=C]
+    #include <stdio.h>
+    #include <math.h> // 引入数学库，使用 sqrt 函数
+
+    int main() {
+        double a, b, c; // 定义三个双精度浮点数变量
+        printf("Solve the equation ax^2 + bx + c = 0\n");
+        printf("Please input the coefficients a, b and c:");
+        scanf("%lf%lf%lf", &a, &b, &c); // 读入 a b c
+        double delta = b * b - 4 * a * c; // 计算判别式
+        if (delta < 0) {
+            printf("No real roots.\n");
+        } else if (delta == 0) {
+            double root = -b / (2 * a);
+            printf("One real root: %lf\n", root);
+        } else {
+            double root1 = (-b + sqrt(delta)) / (2 * a);
+            double root2 = (-b - sqrt(delta)) / (2 * a);
+            printf("Two real roots: %lf and %lf\n", root1, root2);
+        }
+        return 0;
+    }
+\end{lstlisting}
+
+这个例子展示了如何使用分支选择语句 \lstinline{if-else} 来处理不同的情况。
+相比于前面的例子，这里你需要了解的内容有：
+
+\begin{itemize}
+    \item \lstinline{double} 用于定义双精度浮点数变量，可以存储小数，与 \lstinline{int} 不同；
+    \item 在 \lstinline{scanf} 和 \lstinline{printf} 中，使用 \lstinline{%lf} 来表示双精度浮点数的占位符；
+    \item 使用算术运算符 “\lstinline{+}”、“\lstinline{-}”、“\lstinline{*}”、“\lstinline{/}”、“\lstinline{%}” 进行加减乘除和取模（即除法求余数）运算；
+    \item 使用数学库中的函数，比如这里的 \lstinline{sqrt()} 用于计算平方根；使用这些函数前需要包含相应的头文件：\lstinline{#include <math.h>}；其中还有很多常用的数学函数，如 \lstinline{pow()}（幂运算）、\lstinline{sin()}、\lstinline{cos()}（三角函数）等；
+    \item 使用 \lstinline{if-else} 语句根据条件执行不同的代码块。
+\end{itemize}
+
+\section{Online Judge 练习平台}
+
+Online Judge（OJ）是指在线编程练习平台，提供了大量的编程题目供练习。
+常见的 OJ 平台有：洛谷、Codeforces、牛客网、LeetCode 等。
+
+简单介绍一下洛谷平台的使用方法：
+
+\begin{itemize}
+    \item 访问洛谷网站：\href{https://www.luogu.com.cn/}{https://www.luogu.com.cn/}，注册并登录；
+    \item 浏览题库，选择适合自己水平的题目进行练习；
+    \item 阅读题目描述，理解题意和输入输出要求；
+    \item 在本地编写代码，调试通过后，将代码提交到洛谷平台；
+    \item 提交后，系统会自动评测代码的正确性和效率，并给出结果反馈：AC 表示正确，其他结果表示有错误或超时等问题；
+    \item 选择提交时要选择 C 语言作为编程语言；
+    \item 严格遵守输入输出格式，不要输出多余内容；比如 \ref{sec:input-output} 节中的程序就不适合直接提交到 OJ 平台，因为它包含了提示信息，去除“Please input...”和“The result...”，只输出一个数字表示结果即可。
+\end{itemize}
+
+\begin{problemset}[练习]
+    \item 在洛谷通过以下题目：
+        \href{https://www.luogu.com.cn/problem/P1001}{P1001 A+B Problem}、
+        \href{https://www.luogu.com.cn/problem/P1150}{P1150 Peter 的烟}、
+        \href{https://www.luogu.com.cn/problem/P1425}{P1425 小鱼的游泳时间}。
+    \item 现在你已经掌握了基本的输入、计算、输出三步；接下来请你编写一个程序，读取平面上三个点的坐标，计算并输出它们构成的三角形的三条边的长度、三个角的角度以及三角形面积。
+\end{problemset}
+
+\newpage
+
+\textbf{参考答案：}
+
+\begin{lstlisting}[language=C]
+    #include <stdio.h>
+    #include <math.h>
+
+    int main() {
+        const double PI = acos(-1.0);
+        double x1, y1, x2, y2, x3, y3;
+        printf("Please input the coordinates of three points (x1 y1 x2 y2 x3 y3):");
+        scanf("%lf%lf%lf%lf%lf%lf", &x1, &y1, &x2, &y2, &x3, &y3);
+
+        double a = sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));
+        double b = sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));
+        double c = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+
+        double angleA = acos((b*b + c*c - a*a) / (2*b*c)) * 180.0 / PI;
+        double angleB = acos((a*a + c*c - b*b) / (2*a*c)) * 180.0 / PI;
+        double angleC = 180.0 - angleA - angleB;
+
+        double s = (a + b + c) / 2;
+        double area = sqrt(s * (s - a) * (s - b) * (s - c));
+
+        printf("Sides: a=%.2lf, b=%.2lf, c=%.2lf\n", a, b, c);
+        printf("Angles: A=%.2lf°, B=%.2lf°, C=%.2lf°\n", angleA, angleB, angleC);
+        printf("Area: %.2lf\n", area);
+
+        return 0;
+    }
+\end{lstlisting}
+
+\end{document}
