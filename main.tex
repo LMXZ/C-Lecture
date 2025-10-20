@@ -41,6 +41,10 @@
 \href{https://www.codeblocks.org/downloads/binaries/}
 {https://www.codeblocks.org/downloads/binaries/}
 
+选择“Windows(64 bit)”（如果你用的是 Windows 的话）下的 \lstinline{codeblocks-X.Xmingw-setup.exe}。这个版本自带了 GCC 编译器，安装后即可使用。
+
+使用 Code::Blocks 只是为了快速上手，但并不推荐使用作为长期的开发工具，等你熟悉了 C 语言之后，可以考虑使用更强大的 IDE，比如 Visual Studio Code、CLion 等。
+
 \section{第一个程序，Hello World！}
 
 Hello World 是指输出“Hello, World”的简单程序，在开始学习一门语言时，一般会从这里开始入手。
@@ -63,7 +67,7 @@ Hello World 是指输出“Hello, World”的简单程序，在开始学习一�
     \item \lstinline{int main()} 是主函数的定义，程序从这里开始执行；
     \item \lstinline{printf("Hello, World!");} 用于输出内容到屏幕，括号内的内容是要输出的字符串；
     \item \lstinline{return 0;} 表示程序正常结束，返回值为 0；
-    \item “\lstinline{// 输出 Hello World}” 这种字样是注释，用于做批注，以便人类能看懂；计算机并不会理会 \lstinline{//} 以及后面的内容；
+    \item “\lstinline{// 输出 Hello World}” 这种字样是注释，用于做批注，以便人类能看懂；计算机并不会理会“\lstinline{//}”以及后面的内容；
     \item 在 \lstinline{int main} 里面的每一行的结尾都必须有一个分号 “\lstinline{;}”；
     \item 输入程序的时候要特别注意，把输入法关掉，否则你输入的符号会变成全角字符；程序中的符号应该统一为半角字符。
 \end{itemize}
@@ -152,6 +156,17 @@ Online Judge（OJ）是指在线编程练习平台，提供了大量的编程题
     \item 严格遵守输入输出格式，不要输出多余内容；比如 \ref{sec:input-output} 节中的程序就不适合直接提交到 OJ 平台，因为它包含了提示信息，去除“Please input...”和“The result...”，只输出一个数字表示结果即可。
 \end{itemize}
 
+\section{学习方法}
+
+这里能讲到的内容毕竟有限，学习过程中需要善于查找资料，遇到问题时可以：
+\begin{itemize}
+    \item 查阅 C 语言相关书籍和在线文档，如 \href{https://en.cppreference.com/w/c}{C Reference}；这是最靠谱，最权威的参考资料；
+    \item 利用搜索引擎查找相关问题的解决方案；
+    \item 查阅编程社区和论坛，向其他程序员请教问题；
+    \item AI 助手（比如 ChatGPT）也是一个不错的选择，可以用来解答编程相关的问题。
+\end{itemize}
+擅于自主学习和解决问题是成为优秀程序员的重要能力。
+
 \begin{problemset}[练习]
     \item 在洛谷通过以下题目：
         \href{https://www.luogu.com.cn/problem/P1001}{P1001 A+B Problem}、
@@ -159,6 +174,7 @@ Online Judge（OJ）是指在线编程练习平台，提供了大量的编程题
         \href{https://www.luogu.com.cn/problem/P1425}{P1425 小鱼的游泳时间}。
     \item 现在你已经掌握了基本的输入、计算、输出三步；接下来请你编写一个程序，读取平面上三个点的坐标，计算并输出它们构成的三角形的三条边的长度、三个角的角度以及三角形面积。
 \end{problemset}
+
 
 \newpage
 
