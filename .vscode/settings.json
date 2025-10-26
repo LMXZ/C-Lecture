@@ -57,5 +57,8 @@
         "*.fls",
         "*.log",
         "*.fdb_latexmk"
-    ]
+    ],
+    "files.associations": {
+        "stdio.h": "c"
+    }
 }

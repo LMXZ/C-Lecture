@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "compile_cpp", // 任务名称，可在launch.json中调用
+            "type": "shell", // 任务在shell中执行
+            "command": "g++", // 编译器命令，Windows下可能是g++.exe
+            "args": [ // 传递给编译器的参数
+                "-Wall",
+                "-Wextra",
+                "-fsanitize=undefined",
+                "-D",
+                "_GLIBCXX_DEBUG",
+                "-D",
+                "LOCAL",
+                "${file}", // 当前活动的源文件，即X.cpp
+                "-o", // 指定输出文件
+                "${fileDirname}/${fileBasenameNoExtension}" // 输出路径和文件名（去掉扩展名）
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true // 设为默认生成任务，可用Ctrl+Shift+B触发
+            },
+            "problemMatcher": ["$gcc"] // 用于捕获编译器输出的错误
+        }
+    ]
+}

@@ -209,4 +209,237 @@ Online Judge（OJ）是指在线编程练习平台，提供了大量的编程题
     }
 \end{lstlisting}
 
+\chapter{循环、数组、函数}
+
+\section{循环}
+
+\subsection{for循环}
+
+\lstinline{for} 循环是最常用的循环结构，特别适合在已知循环次数的情况下使用。
+
+\begin{lstlisting}[language=C]
+    for (int i = 1; i <= 5; i++) {
+        printf("%d ", i);
+    }
+\end{lstlisting}
+
+语法说明：
+
+\lstinline{int i = 1}：循环变量初始化
+
+\lstinline{i <= 5}：循环条件
+
+\lstinline{i++}：循环变量更新
+
+在较老版本的 C（如 C89/ANSI C）标准下，不能在 for 语句头中声明循环变量，需要在循环外先声明变量，例如：
+
+\begin{lstlisting}[language=C]
+    int i, j;
+    for (i = 1; i <= 5; i++) {
+        for (j = 1; j <= 5; j++)
+        printf("%d, %d\n", i, j);
+    }
+\end{lstlisting}
+
+注意：这样声明的 i 在循环结束后仍然可见（作用域为所在块），如需限制作用域可另起一个内层块。
+
+\subsection{while循环}
+
+\lstinline{while} 循环在不确定循环次数，但知道循环条件时使用。
+
+\begin{lstlisting}[language=C]
+    int count = 1;
+    // 同样打印数字1到5
+    while (count <= 5) {
+        printf("%d ", count);
+        count++;
+    }
+\end{lstlisting}
+
+
+\subsection{do-while循环}
+
+\lstinline{do-while} 循环与 \lstinline{while} 循环类似，但会先执行一次循环体，再检查条件。
+
+\begin{lstlisting}[language=C]
+    int count = 1; // 把 count 改为 6 或以上的值，循环体代码也至少会执行一次
+    do {
+        printf("%d ", num);
+        num++;
+    } while (num <= 5);
+\end{lstlisting}
+
+\section{数组}
+
+\subsection{数组声明}
+
+在不同的 C 标准中，数组的定义方式有区别。
+在 C99 及更老的版本中，数组大小只能是常量，而之后的版本中可以为变量。
+
+\begin{lstlisting}[language=C]
+    const int BUF_LEN = 16;
+    int fixed_buf1[10]; // 常量长度
+    int fixed_buf2[BUF_LEN]; // 符号常量也是可以的
+    // 以下定义方式在老版本是不可用的
+    int len1 = 16, len2 = 0;
+    scanf("%d", &len2);
+    int buf1[len1], buf2[len2]; // 无论是自己赋值的变量还是用户输入的变量，都可以
+\end{lstlisting}
+
+动态分配是通用的数组定义方式：
+
+\begin{lstlisting}[language=C]
+    #include <stdlib.h>
+
+    int main {
+        int n = 0;
+        scanf("%d", &n);
+        int *p = malloc(n * sizeof(int));
+        if (p == NULL) {
+            // 内存分配失败的处理
+        }
+        for (int i = 0; i < n; ++i)
+            scanf("%d", &p[i])
+        // 一顿操作以后，如果数组不再使用了，记得释放内存！！
+        free(p);
+        return 0;
+    }
+\end{lstlisting}
+
+兼容性提示：若需要同时支持可能不含可变长度数组的实现，可以用预处理判断并退回到 malloc 方案：
+\begin{lstlisting}[language=C]
+    /* 如果实现不支持 VLA，则 __STDC_NO_VLA__ 会被定义 */
+    #ifndef __STDC_NO_VLA__
+        int arr[n];
+    #else
+        int *arr = malloc(n * sizeof *arr);
+        /* 使用后记得 free(arr); */
+    #endif
+\end{lstlisting}
+
+好复杂是不是？\textbf{现在先记住第一个示例就行了。}作为平时的练习，你在做 OJ 上的题目时一般不会使用动态分配的方式，但在一些实际工程中动态分配是到处都有的。
+
+\subsection{数组访问}
+
+数组下标从0开始，到 $n-1$ 结束（$n$ 为数组长度），\textbf{不包含 $n$}。
+当你访问了超过这个范围的下标，就会发生越界。
+如果你想要让数组下标从 $1$ 开始，可以把数组长度开得比实际使用的大小大一点。
+和现代的各种语言不同，默认情况下，程序\textbf{不会}自动帮你检查数组下标是否越界并报错，
+当你越界时，会出现很多匪夷所思的 bug。
+
+那么有没有不默认的情况？有的！这一点在绝大多数国内外教材中都不会提及，但我们后面会介绍。
+
+\section{函数}
+
+\subsection{前置知识：表达式}
+
+C 程序中，几乎一切操作和运算都是通过表达式实现的。举个例子：
+
+\begin{lstlisting}[language=C]
+    int a = 0;
+    int b = a++;
+    int c = ++a;
+    int d = scanf("%d%d%d", &a, &b, &c);
+\end{lstlisting}
+
+其中 \lstinline{0}、\lstinline{a++}、\lstinline{++a} 都是表达式。一个表达式包含以下要素：
+
+\begin{itemize}
+    \item 对现有变量、输入输出进行的操作（也可以不做操作）；
+    \item 返回值（可以为空）。
+\end{itemize}
+
+以 \lstinline{a++} 举例，它进行的操作就是将变量 \lstinline{a} 的值加一，返回值是加一前的变量的值。
+
+\lstinline{scanf("%d%d%d", &a, &b, &c)} 也是表达式，
+它的操作是读取三个变量，返回值是读取到的变量的数量。
+
+表达式可以通过运算符、函数等组合成新的表达式：
+
+\begin{lstlisting}[language=C]
+    int e = (scanf("%d%d%d", &a, &b, &c) + ++a * b--) * c++ / --d ^ abs(a + b);
+\end{lstlisting}
+
+\subsection{函数的定义和调用}
+
+函数的定义包括以下要素：
+
+\begin{itemize}
+    \item 参数列表；
+    \item 函数体，即进行的操作；
+    \item 返回值类型。
+\end{itemize}
+
+可以看出函数和表达式是很像的。
+
+调用时需要传递参数，有返回值的话也可以使用返回值做进一步处理。
+
+举个例子：
+
+\label{code:2.func.define_and_invoke}
+
+\begin{lstlisting}[language=C]
+    #include <stdio.h>
+
+    int global_arr[10], u = 0;
+
+    float func(int x, float y, int arr[]) {
+        for (int i = 0; i < 10; i++) {
+            scanf("%d", &arr[i]); // 函数中不仅可以做运算，还可以输入输出
+        }
+        float res = ((float)x) / 10 + x / 7 + y; 
+        for (int i = 0; i < 10; i++) {
+            res += ++arr[i]; // 这里的操作会影响到数组中的元素
+        }
+        x++; // 操作后的 x 会变化，但不会改变 main 中 a 的值
+        u++;
+        printf("x, u after change: %d, %d\n", x, u);
+        return res; // 函数返回类型不是 void 的话，就必须有返回值
+    }
+
+    int main() {
+        int a;
+        float b;
+        scanf("%d%f", &a, &b);
+        float result = func(a, b, global_arr) + a; // 调用，并接收返回值做进一步运算
+        printf("Result: %.2f\n", result);
+        for (int i = 0; i < 10; i++) {
+            printf("global_arr[%d] = %d\n", i, global_arr[i]); // 输出会显示数组里的元素都加了 1
+        }
+        print("a after func: %d\n", a); // a 不会因为 x++ 而变化
+        print("u after func: %d\n", u); // 但 u 会变化
+        return 0;
+    }
+\end{lstlisting}
+
+\begin{itemize}
+    \item 传递的参数在函数内部和外部被看作是不同的变量，
+    内部改变并不会影响到函数外，但对全局变量的操作是有效的；
+    \item 数组也可以作为参数传递，但和单一变量参数不同，函数中数组内元素的改变会影响到函数外；
+    可以这么理解：传递的数组包含的是数组的位置信息，而不是数组内部元素的值。
+\end{itemize}
+
+\section{课程前瞻}
+
+目前我是这么想的，现在基础知识差不多了，对于写大多数简单的题目已经没问题了。
+接下来一段时间先带你刷刷题，把基础打好。
+我们从这个题单开始：
+\href{https://github.com/ankitvashisht12/100-questions-of-codeforces}{CF 新手 100 题}。
+每周你就在这个题单里面随便找几个题做一下，具体多少数量我现在也不清楚，因为刷题期间实际讲课节奏我心里也没谱，
+等刷起来以后我们才知道。
+
+要刷到什么程度？大概就是你遇到这个难度的题都能做出来就可以了。
+
+由于前面我只关注你能快速上手实践，很多基础内容都忽略了，刷题期间我会顺带把这部分补上。
+这些内容也很重要，之所以前面不讲是因为这些你在大多数教材上都能看到，
+而且对于“能快速上手实践”其实关系不是很大。
+然后还会讲一些绝大多数国内外课程都不会教的东西。
+
+刷题阶段完成后，接下来就开始一些简单的算法和数据结构，你不去打 ICPC 之类的竞赛的话，不用学的那么变态，掌握基础就行了。
+
+\begin{problemset}[练习]
+    \item 为 程序 \ref{code:2.func.define_and_invoke} 随机构造几组输入，
+    先手动计算输出，然后运行程序看一下和你的预期是否一致；如果不一致，看看你哪里理解错了。
+\end{problemset}
+
 \end{document}
